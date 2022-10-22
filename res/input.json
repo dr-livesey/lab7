@@ -1,0 +1,23 @@
+{
+  "value": 1,
+  "nodes": [
+    {
+      "value": 2,
+      "nodes": [
+        {
+          "value": 4,
+          "nodes": [
+            {
+              "value": 3,
+              "nodes": []
+            },
+            {
+              "value": 5,
+              "nodes": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
