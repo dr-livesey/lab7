@@ -27,15 +27,17 @@ fn main() {
         &std::fs::read_to_string("res/input.json").unwrap(),
     ).unwrap();
 
-    println!("{}", g.write_to_str(&mut graph::GraphIncidenceMatrixWriter).unwrap());
+    println!("{:?}", g.write_to_str(&mut graph::GraphIncidenceMatrixWriter).unwrap());
     */
 
+    /*
     let g = graph::Graph::from_reader(
         &mut graph::JsonGraphReader,
         &std::fs::read_to_string("res/input.json").unwrap(),
     ).unwrap();
 
     println!("{}", g.to_string());
+    */
 }
 
 

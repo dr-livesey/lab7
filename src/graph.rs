@@ -3,7 +3,7 @@
 use anyhow::{anyhow, Result};
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, PartialEq)]
 pub struct Graph {
     value: u8,
     nodes: Vec<Graph>,
@@ -174,8 +174,7 @@ mod tests {
         assert!(writer.ok)
     }
 
-    #[test]
-    fn graph_to_string_test() {
+    fn fill_the_graph() -> Graph {
         let mut g = Graph::new(1);
 
         let mut a = Graph::new(2);
@@ -188,6 +187,20 @@ mod tests {
         a.add(c);
         g.add(a);
 
+        g
+    }
+
+    #[test]
+    fn graph_to_string_test() {
+        let g = fill_the_graph();
+
         assert_eq!(g.to_string(), "1 { 2 { 4 { 3 { } 5 { } } } } ")
+    }
+
+    #[test]
+    fn get_graph_from_json() {
+        let g = fill_the_graph();
+
+        assert_eq!(g, Graph::from_reader(&mut JsonGraphReader, r##"{"value":1,"nodes":[{"value":2,"nodes":[{"value":4,"nodes":[{"value":3,"nodes":[]},{"value":5,"nodes":[]}]}]}]}"##).unwrap())
     }
 }
