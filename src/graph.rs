@@ -3,6 +3,9 @@
 use anyhow::{anyhow, Result};
 use serde::{Deserialize, Serialize};
 
+#[cfg(test)]
+use mockall::{automock, mock, predicate::*};
+
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
 pub struct Graph {
     value: u8,
@@ -45,10 +48,12 @@ impl ToString for Graph {
     }
 }
 
+#[cfg_attr(test, automock)]
 pub trait GraphReader {
     fn read(&mut self, src: &str) -> Result<Graph>;
 }
 
+#[cfg_attr(test, automock)]
 pub trait GraphWriter {
     fn write(&mut self, graph: &Graph) -> Result<String>;
 }
@@ -167,11 +172,72 @@ mod tests {
     }
 
     #[test]
+    fn mock_test_reader() {
+        let mut mock = MockGraphReader::new();
+        mock.expect_read().returning(|_| Ok(fill_the_graph()));
+
+        let g = fill_the_graph();
+
+        assert_eq!(mock.read("anything").unwrap(), g);
+    }
+
+    #[test]
     fn stub_test_writer() {
         let mut writer = StubGraphWriter { ok: false };
         let _ = Graph::new(0).write_to_str(&mut writer);
 
         assert!(writer.ok)
+    }
+
+    #[test]
+    fn mock_test_writer() {
+        let mut mock = MockGraphWriter::new();
+        mock.expect_write()
+            .returning(|_| GraphIncidenceMatrixWriter {}.write(&fill_the_graph()));
+
+        assert_eq!(
+            mock.write(&fill_the_graph()).unwrap(),
+            r##"IncidenceMatrix {
+    header: [
+        "1-2",
+        "2-4",
+        "4-3",
+        "4-5",
+    ],
+    raw: [
+        [
+            true,
+            false,
+            false,
+            false,
+        ],
+        [
+            false,
+            true,
+            false,
+            false,
+        ],
+        [
+            false,
+            false,
+            true,
+            true,
+        ],
+        [
+            false,
+            false,
+            false,
+            false,
+        ],
+        [
+            false,
+            false,
+            false,
+            false,
+        ],
+    ],
+}"##
+        );
     }
 
     fn fill_the_graph() -> Graph {

@@ -1,7 +1,8 @@
 mod graph;
 
+use graph::*;
+
 fn main() {
-    /*
     let mut g = Graph::new(1);
 
     let mut a = Graph::new(2);
@@ -15,11 +16,10 @@ fn main() {
     g.add(a);
 
     std::fs::write(
-        "res/input.json",
-        g.write_to_str(&mut JsonGraphWriter).unwrap(),
+        "res/output.json",
+        g.write_to_str(&mut GraphIncidenceMatrixWriter).unwrap(),
     )
     .unwrap();
-    */
 
     /*
     let g = graph::Graph::from_reader(
@@ -34,10 +34,9 @@ fn main() {
     let g = graph::Graph::from_reader(
         &mut graph::JsonGraphReader,
         &std::fs::read_to_string("res/input.json").unwrap(),
-    ).unwrap();
+    )
+    .unwrap();
 
     println!("{}", g.to_string());
     */
 }
-
-
